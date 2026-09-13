@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Control Digital — Apps a la medida para controlar tu negocio desde el celular</title>
+<meta name="description" content="Diseñamos aplicaciones a la medida para controlar mantenimiento, producción, clientes e inventario desde el celular. Cero papel, control total.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5F4EF;
+    --bg-alt:#ECE9E0;
+    --panel:#FFFFFF;
+    --ink:#16233D;
+    --muted:#5B6472;
+    --blue:#2B4C7E;
+    --blue-dark:#16233D;
+    --amber:#E8963C;
+    --amber-dark:#C97A22;
+    --teal:#3E8E7E;
+    --line:#D9D5C9;
+
+    --font-head:'Space Grotesk', sans-serif;
+    --font-body:'Public Sans', sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important;}
+  }
+
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  h1,h2,h3{
+    font-family:var(--font-head);
+    color:var(--ink);
+    margin:0;
+    line-height:1.15;
+    font-weight:700;
+  }
+
+  p{margin:0;}
+
+  a{color:inherit;}
+
+  .wrap{
+    max-width:1120px;
+    margin:0 auto;
+    padding:0 24px;
+  }
+
+  .measure{
+    max-width:640px;
+  }
+
+  /* ---------- NAV ---------- */
+  header.nav{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:rgba(245,244,239,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px 24px;
+    max-width:1120px;
+    margin:0 auto;
+  }
+  .logo{
+    font-family:var(--font-head);
+    font-weight:700;
+    font-size:20px;
+    letter-spacing:-0.01em;
+  }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:var(--font-body);
+    font-weight:600;
+    font-size:15px;
+    padding:11px 20px;
+    border-radius:8px;
+    text-decoration:none;
+    border:1.5px solid transparent;
+    cursor:pointer;
+    transition:transform .15s ease, background .15s ease, border-color .15s ease;
+  }
+  .btn-primary{
+    background:var(--amber);
+    color:#241300;
+  }
+  .btn-primary:hover{
+    background:var(--amber-dark);
+    transform:translateY(-1px);
+  }
+  .btn-nav{
+    padding:9px 16px;
+    font-size:14px;
+  }
+  .btn-ghost{
+    background:transparent;
+    border-color:rgba(245,244,239,0.55);
+    color:var(--bg);
+  }
+  .btn-ghost:hover{
+    background:var(--bg);
+    color:var(--ink);
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    overflow:hidden;
+    padding:88px 0 96px;
+    background:var(--blue-dark);
+  }
+  .hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+      linear-gradient(rgba(245,244,239,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(245,244,239,0.06) 1px, transparent 1px);
+    background-size:38px 38px;
+    mask-image:linear-gradient(to bottom, black, transparent 78%);
+    -webkit-mask-image:linear-gradient(to bottom, black, transparent 78%);
+    pointer-events:none;
+  }
+  .hero-inner{
+    position:relative;
+    display:grid;
+    grid-template-columns:1.1fr 0.9fr;
+    gap:56px;
+    align-items:center;
+  }
+  .hero-eyebrow{
+    font-family:var(--font-mono);
+    font-size:13px;
+    color:var(--amber);
+    margin-bottom:18px;
+    opacity:0;
+    animation:riseIn .6s ease-out .05s forwards;
+  }
+  h1.hero-title{
+    color:var(--bg);
+    font-size:58px;
+    letter-spacing:-0.02em;
+    margin-bottom:22px;
+    opacity:0;
+    animation:riseIn .6s ease-out .15s forwards;
+  }
+  .hero-sub{
+    color:rgba(245,244,239,0.78);
+    font-size:18px;
+    margin-bottom:32px;
+    opacity:0;
+    animation:riseIn .6s ease-out .28s forwards;
+  }
+  .hero-ctas{
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+    opacity:0;
+    animation:riseIn .6s ease-out .4s forwards;
+  }
+  @keyframes riseIn{
+    from{opacity:0; transform:translateY(14px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+
+  /* Mock dashboard panel */
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:10px;
+    box-shadow:0 24px 48px -24px rgba(22,35,61,0.28);
+    overflow:hidden;
+    opacity:0;
+    animation:riseIn .7s ease-out .3s forwards;
+  }
+  .panel-bar{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:11px 14px;
+    background:var(--blue-dark);
+  }
+  .panel-dot{
+    width:8px; height:8px; border-radius:50%;
+    background:rgba(255,255,255,0.35);
+  }
+  .panel-title{
+    margin-left:8px;
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:rgba(255,255,255,0.75);
+  }
+  .panel-body{
+    padding:22px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+  }
+  .kpi{
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:14px;
+  }
+  .kpi-label{
+    font-size:12.5px;
+    color:var(--muted);
+    margin-bottom:8px;
+  }
+  .kpi-value{
+    font-family:var(--font-mono);
+    font-weight:600;
+    font-size:24px;
+    color:var(--blue-dark);
+  }
+  .kpi-value.good{color:var(--teal);}
+  .kpi-bar-track{
+    margin-top:10px;
+    height:6px;
+    background:var(--bg-alt);
+    border-radius:4px;
+    overflow:hidden;
+  }
+  .kpi-bar-fill{
+    height:100%;
+    border-radius:4px;
+    background:var(--teal);
+  }
+  .kpi.wide{grid-column:1 / -1;}
+  .kpi-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    color:var(--muted);
+    margin-top:6px;
+  }
+
+  /* ---------- SECTION GENERIC ---------- */
+  section{padding:80px 0;}
+  .section-alt{background:var(--bg-alt);}
+  h2.section-title{
+    position:relative;
+    padding-left:20px;
+    font-size:30px;
+    letter-spacing:-0.01em;
+    margin-bottom:14px;
+  }
+  h2.section-title::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:6px;
+    bottom:6px;
+    width:5px;
+    background:var(--amber);
+    border-radius:3px;
+  }
+  .section-lead{
+    color:var(--muted);
+    margin-bottom:44px;
+  }
+
+  /* ---------- PROBLEMA ---------- */
+  .pain-list{
+    display:flex;
+    flex-direction:column;
+    gap:0;
+  }
+  .pain-item{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:20px;
+    padding:22px 0;
+    border-top:1px solid var(--line);
+  }
+  .pain-list .pain-item:last-child{border-bottom:1px solid var(--line);}
+  .pain-mark{
+    width:6px;
+    background:var(--amber);
+    border-radius:3px;
+  }
+  .pain-text{font-size:16.5px;}
+  .pain-close{
+    margin-top:36px;
+    font-family:var(--font-head);
+    font-weight:600;
+    font-size:20px;
+    color:var(--blue-dark);
+  }
+
+  /* ---------- SERVICIOS ---------- */
+  .services-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:0;
+    border-top:1px solid var(--line);
+    border-left:1px solid var(--line);
+  }
+  .service-cell{
+    padding:24px 26px;
+    border-right:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  .service-cell h3{
+    font-size:17px;
+    font-weight:600;
+    margin-bottom:8px;
+  }
+  .service-cell p{
+    color:var(--muted);
+    font-size:15px;
+  }
+
+  /* ---------- CASOS ---------- */
+  .case{
+    display:grid;
+    grid-template-columns:0.95fr 1.05fr;
+    gap:52px;
+    align-items:center;
+    padding:52px 0;
+  }
+  .case:not(:last-child){border-bottom:1px solid var(--line);}
+  .case.reverse .case-visual{order:2;}
+  .case.reverse .case-copy{order:1;}
+  .case-label{
+    font-family:var(--font-mono);
+    font-size:13px;
+    color:var(--blue);
+    margin-bottom:10px;
+  }
+  .case h3{
+    font-size:24px;
+    margin-bottom:16px;
+  }
+  .case-row{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:12px;
+    margin-bottom:10px;
+    font-size:15px;
+  }
+  .case-row .tag{
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--muted);
+    padding-top:2px;
+    white-space:nowrap;
+  }
+  .case-visual{
+    background:var(--blue-dark);
+    border:1px solid var(--blue-dark);
+    border-radius:10px;
+    padding:26px;
+  }
+  .gauge-wrap{display:flex; gap:18px; align-items:center;}
+  .gauge{
+    width:96px; height:96px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:conic-gradient(var(--amber) calc(var(--pct) * 1%), rgba(245,244,239,0.14) 0);
+  }
+  .gauge-inner{
+    width:70px; height:70px;
+    border-radius:50%;
+    background:var(--blue-dark);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-mono);
+    font-weight:600;
+    font-size:16px;
+    color:var(--bg);
+  }
+  .gauge-legend{font-size:13px; color:rgba(245,244,239,0.7);}
+  .gauge-legend div{margin-bottom:4px;}
+  .mtto-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:12px;}
+  .mtto-list li{
+    display:flex; gap:10px; align-items:baseline;
+    font-family:var(--font-mono);
+    font-size:13px;
+  }
+  .mtto-list li span.status{
+    color:var(--amber);
+  }
+  .mtto-list li span.desc{
+    font-family:var(--font-body);
+    color:var(--bg);
+    font-size:15px;
+  }
+
+  /* ---------- COMO FUNCIONA ---------- */
+  .steps{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:36px;
+  }
+  .step-num{
+    font-family:var(--font-head);
+    font-weight:700;
+    font-size:40px;
+    color:var(--amber);
+    margin-bottom:10px;
+    letter-spacing:-0.02em;
+  }
+  .step h3{
+    font-size:18px;
+    margin-bottom:8px;
+  }
+  .step p{
+    color:var(--muted);
+    font-size:15px;
+  }
+
+  /* ---------- CTA FINAL ---------- */
+  .cta-final{
+    background:var(--blue-dark);
+    color:var(--bg);
+    text-align:left;
+    border-radius:0;
+  }
+  .cta-final h2{
+    color:var(--bg);
+    font-size:32px;
+    margin-bottom:14px;
+  }
+  .cta-final p{
+    color:rgba(245,244,239,0.75);
+    margin-bottom:30px;
+  }
+  .cta-final-inner{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:28px;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    padding:32px 0;
+    border-top:1px solid var(--line);
+  }
+  .footer-inner{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:12px;
+    font-size:14px;
+    color:var(--muted);
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:860px){
+    .hero-inner{grid-template-columns:1fr;}
+    h1.hero-title{font-size:38px;}
+    h2.section-title{padding-left:16px;}
+    .step-num{font-size:34px;}
+    .services-grid{grid-template-columns:1fr;}
+    .case{grid-template-columns:1fr; gap:24px;}
+    .case.reverse .case-visual{order:1;}
+    .case.reverse .case-copy{order:2;}
+    .steps{grid-template-columns:1fr; gap:28px;}
+    section{padding:56px 0;}
+    .cta-final-inner{flex-direction:column; align-items:flex-start;}
+  }
+
+  :focus-visible{
+    outline:2.5px solid var(--blue);
+    outline-offset:2px;
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <div class="logo">Control Digital</div>
+    <a class="btn btn-primary btn-nav" href="https://wa.me/524747492534?text=Hola%20Jorge%2C%20quiero%20saber%20más%20sobre%20Control%20Digital" target="_blank" rel="noopener">Hablar por WhatsApp</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-inner">
+    <div>
+      <div class="hero-eyebrow">Aplicaciones a la medida para negocios y fábricas</div>
+      <h1 class="hero-title">Tu negocio ya no necesita papel para funcionar.</h1>
+      <p class="hero-sub measure">Diseñamos aplicaciones a la medida para controlar mantenimiento, producción, clientes e inventario desde el celular — sin hojas sueltas, sin Excel disperso, sin depender de la memoria de nadie.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="https://wa.me/524747492534?text=Hola%20Jorge%2C%20quiero%20contarte%20cómo%20controlamos%20nuestro%20proceso" target="_blank" rel="noopener">Cuéntame tu proceso</a>
+        <a class="btn btn-ghost" href="#casos">Ver casos reales</a>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-bar">
+        <div class="panel-dot"></div><div class="panel-dot"></div><div class="panel-dot"></div>
+        <div class="panel-title">linea-03 · turno matutino</div>
+      </div>
+      <div class="panel-body">
+        <div class="kpi">
+          <div class="kpi-label">OEE del turno</div>
+          <div class="kpi-value good">78.4%</div>
+          <div class="kpi-bar-track"><div class="kpi-bar-fill" style="width:78%"></div></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Disponibilidad</div>
+          <div class="kpi-value">91.2%</div>
+          <div class="kpi-bar-track"><div class="kpi-bar-fill" style="width:91%"></div></div>
+        </div>
+        <div class="kpi wide">
+          <div class="kpi-label">Órdenes de mantenimiento</div>
+          <div class="kpi-row">
+            <span>Abiertas: 3</span>
+            <span>En proceso: 2</span>
+            <span>Cerradas hoy: 5</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="section-title">¿Te suena familiar?</h2>
+    <p class="section-lead measure">Así controlan sus procesos la mayoría de las fábricas y negocios antes de digitalizarse.</p>
+    <div class="pain-list">
+      <div class="pain-item">
+        <div class="pain-mark"></div>
+        <p class="pain-text">Las órdenes de mantenimiento se anotan en una libreta que nadie encuentra cuando se necesita.</p>
+      </div>
+      <div class="pain-item">
+        <div class="pain-mark"></div>
+        <p class="pain-text">El OEE de las líneas se calcula a mano, un turno después de que ya pasó el problema.</p>
+      </div>
+      <div class="pain-item">
+        <div class="pain-mark"></div>
+        <p class="pain-text">Cada supervisor lleva el control a su manera, y nadie tiene el panorama completo.</p>
+      </div>
+      <div class="pain-item">
+        <div class="pain-mark"></div>
+        <p class="pain-text">La información existe, pero está repartida entre papeles, WhatsApp y la memoria de alguien.</p>
+      </div>
+    </div>
+    <p class="pain-close">Cada proceso sin digitalizar es información que se pierde.</p>
+  </div>
+</section>
+
+<section class="section-alt">
+  <div class="wrap">
+    <h2 class="section-title">Aplicaciones a la medida de tu proceso, no plantillas genéricas.</h2>
+    <p class="section-lead measure">No vendemos un software fijo. Construimos la app pensada en cómo trabajas tú, para el proceso que realmente necesitas controlar.</p>
+    <div class="services-grid">
+      <div class="service-cell">
+        <h3>Mantenimiento de equipos</h3>
+        <p>Órdenes, historial y estatus de cada máquina desde el celular.</p>
+      </div>
+      <div class="service-cell">
+        <h3>OEE y producción</h3>
+        <p>Disponibilidad, rendimiento y calidad de cada línea, en tiempo real.</p>
+      </div>
+      <div class="service-cell">
+        <h3>Control de clientes</h3>
+        <p>Seguimiento comercial y citas sin depender de una agenda de papel.</p>
+      </div>
+      <div class="service-cell">
+        <h3>Inventario y almacén</h3>
+        <p>Entradas, salidas y existencias siempre actualizadas.</p>
+      </div>
+      <div class="service-cell">
+        <h3>Agenda y citas</h3>
+        <p>Para consultorios y negocios de servicio que hoy agendan a mano.</p>
+      </div>
+      <div class="service-cell">
+        <h3>Tu proceso, el que sea</h3>
+        <p>Si hoy lo controlas en papel o Excel, se puede digitalizar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="casos">
+  <div class="wrap">
+    <h2 class="section-title">Casos reales</h2>
+    <p class="section-lead measure">Dos ejemplos de procesos industriales que pasaron del papel al control digital.</p>
+
+    <div class="case">
+      <div class="case-copy">
+        <div class="case-label">Caso 01 · Mantenimiento industrial</div>
+        <h3>El historial de cada equipo, siempre a la mano.</h3>
+        <div class="case-row">
+          <span class="tag">antes</span>
+          <span>Bitácoras en papel, historial disperso, nadie sabía con certeza qué se atendió y cuándo.</span>
+        </div>
+        <div class="case-row">
+          <span class="tag">con la app</span>
+          <span>Cada equipo tiene su historial completo. Las órdenes se abren y cierran desde el celular, y el encargado ve en tiempo real qué está pendiente.</span>
+        </div>
+      </div>
+      <div class="case-visual">
+        <ul class="mtto-list">
+          <li><span class="status">●</span><span class="desc">Compresor L2 — mantenimiento preventivo cerrado</span></li>
+          <li><span class="status" style="color:var(--teal)">●</span><span class="desc">Banda transportadora — orden en proceso</span></li>
+          <li><span class="status">●</span><span class="desc">Bomba dosificadora — historial: 14 servicios</span></li>
+          <li><span class="status" style="color:var(--teal)">●</span><span class="desc">Motor línea 3 — orden nueva asignada</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="case reverse">
+      <div class="case-copy">
+        <div class="case-label">Caso 02 · OEE de líneas de producción</div>
+        <h3>El desempeño de la línea, sin esperar al final del turno.</h3>
+        <div class="case-row">
+          <span class="tag">antes</span>
+          <span>Disponibilidad, rendimiento y calidad se calculaban a mano al terminar el turno, cuando ya no había nada que hacer con el dato.</span>
+        </div>
+        <div class="case-row">
+          <span class="tag">con la app</span>
+          <span>El OEE se calcula solo, en tiempo real, con las tres variables visibles por línea — para decidir con datos del turno, no del turno anterior.</span>
+        </div>
+      </div>
+      <div class="case-visual">
+        <div class="gauge-wrap">
+          <div class="gauge" style="--pct:82"><div class="gauge-inner">82%</div></div>
+          <div class="gauge-legend">
+            <div>Disponibilidad: 93%</div>
+            <div>Rendimiento: 90%</div>
+            <div>Calidad: 98%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-alt">
+  <div class="wrap">
+    <h2 class="section-title">Cómo funciona</h2>
+    <p class="section-lead measure">De la primera plática a tu app funcionando, sin complicaciones técnicas de tu lado.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>Cuéntame tu proceso</h3>
+        <p>Platicamos por WhatsApp qué controlas hoy y cómo lo haces.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>Diseño a tu medida</h3>
+        <p>Construyo la app pensada en cómo trabajas tú, no al revés.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>La usas desde tu celular</h3>
+        <p>Sin instalar nada raro: funciona como una página web, en cualquier equipo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-final">
+  <div class="wrap cta-final-inner">
+    <div>
+      <h2>Cero papel, control desde tu celular.</h2>
+      <p class="measure">Cuéntame qué proceso te gustaría dejar de controlar en papel o Excel.</p>
+    </div>
+    <a class="btn btn-primary" href="https://wa.me/524747492534?text=Hola%20Jorge%2C%20quiero%20contarte%20cómo%20controlamos%20nuestro%20proceso" target="_blank" rel="noopener">Escríbeme por WhatsApp</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-inner">
+    <span>Control Digital — Jorge Martínez</span>
+    <span>WhatsApp 474 749 2534</span>
+  </div>
+</footer>
+
+</body>
+</html>
